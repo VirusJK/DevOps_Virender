@@ -1,0 +1,161 @@
+# AI-Powered Daily Stand-up Automation using AWS Lambda + Amazon Bedrock + DevOps Tools
+
+This project automates the daily stand-up process in software development teams using AWS, GenAI (Amazon Bedrock), and DevOps tools like GitHub and Jira. It pulls team activity, summarizes it using AI, and sends a Slack or Email update—saving time and boosting productivity.
+
+---
+
+## ✅ Use Case Summary
+
+### **Problem:**
+Manual stand-up meetings waste time, especially in distributed or large teams. People forget to update, miss meetings, or give inconsistent reports.
+
+### **Solution:**
+Automate the daily stand-up by fetching GitHub/Jira activity and summarizing it using Amazon Bedrock's GenAI model. Send this summary via Slack or Email every day using EventBridge and Lambda.
+
+---
+
+## 📌 Components Used
+
+- **AWS Lambda (Python)**
+- **Amazon Bedrock (Claude/Titan)**
+- **Amazon EventBridge (Scheduler)**
+- **Amazon SNS / Slack Webhook**
+- **Terraform** (Infrastructure as Code)
+- **GitHub / Jira API** (activity fetch)
+
+---
+Terraform code :
+
+---
+
+## 1. Terraform Code: `terraform/main.tf`
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_iam_role" "lambda_exec_role" {
+  name = "lambda_exec_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_lambda_function" "genai_standup" {
+  filename         = "../lambda/function.zip"
+  function_name    = "genai_standup"
+  role             = aws_iam_role.lambda_exec_role.arn
+  handler          = "handler.lambda_handler"
+  runtime          = "python3.11"
+  source_code_hash = filebase64sha256("../lambda/function.zip")
+  timeout          = 60
+
+  environment {
+    variables = {
+      JIRA_EMAIL         = "your@email.com"
+      JIRA_TOKEN         = "your_token"
+      GITHUB_TOKEN       = "your_github_token"
+      SLACK_WEBHOOK_URL  = "https://hooks.slack.com/services/xxxx/yyyy/zzzz"
+    }
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "daily_trigger" {
+  name                = "daily_standup_trigger"
+  schedule_expression = "cron(0 8 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "lambda_target" {
+  rule      = aws_cloudwatch_event_rule.daily_trigger.name
+  target_id = "lambda"
+  arn       = aws_lambda_function.genai_standup.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.genai_standup.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.daily_trigger.arn
+}
+
+
+
+
+Lambda code : 
+
+
+import json
+import requests
+import boto3
+import os
+
+def get_jira_data():
+    headers = {
+        "Authorization": f"Basic {os.environ['JIRA_TOKEN']}",
+        "Content-Type": "application/json"
+    }
+    url = f"https://yourdomain.atlassian.net/rest/api/3/search?jql=assignee=currentUser()"
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    tasks = [f"{issue['key']}: {issue['fields']['summary']}" for issue in data.get("issues", [])]
+    return "\n".join(tasks)
+
+def get_github_activity():
+    headers = {
+        "Authorization": f"token {os.environ['GITHUB_TOKEN']}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    repos = ["your-org/your-repo"]
+    messages = []
+    for repo in repos:
+        url = f"https://api.github.com/repos/{repo}/commits"
+        res = requests.get(url, headers=headers)
+        commits = res.json()
+        for commit in commits[:5]:
+            messages.append(f"{commit['commit']['author']['name']}: {commit['commit']['message']}")
+    return "\n".join(messages)
+
+def summarize_with_bedrock(text):
+    bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
+    prompt = f"Summarize the following development updates:\n{text}"
+    response = bedrock.invoke_model(
+        body=json.dumps({"prompt": prompt, "max_tokens": 300}),
+        modelId="anthropic.claude-v2",
+        accept="application/json",
+        contentType="application/json"
+    )
+    result = json.loads(response['body'].read())
+    return result['completion']
+
+def send_to_slack(message):
+    webhook = os.environ["SLACK_WEBHOOK_URL"]
+    requests.post(webhook, json={"text": message})
+
+def lambda_handler(event, context):
+    jira = get_jira_data()
+    git = get_github_activity()
+    combined = f"{jira}\n\n{git}"
+    summary = summarize_with_bedrock(combined)
+    send_to_slack(f"**Daily Stand-up Summary**\n{summary}")
+    return {"statusCode": 200, "body": "Stand-up Sent!"}
+
+
+
+
+
+
