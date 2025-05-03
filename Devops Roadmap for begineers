@@ -1,0 +1,27 @@
+AWS DevOps Roadmap (Beginner to Advanced)
+
+Week 1–2: Foundation
+	•	Learn Linux basics and Git version control.
+	•	Understand how the cloud works—start with AWS basics (IAM, EC2, S3).
+	•	Set up a GitHub account and start pushing daily code.
+
+Week 3–4: CI/CD Basics
+	•	Learn AWS CodeCommit, CodeBuild, CodePipeline.
+	•	Build a sample pipeline that pulls code from GitHub, builds, and deploys to EC2.
+	•	Start with basic Terraform for provisioning EC2 + S3.
+
+Week 5–6: Serverless + Monitoring
+	•	Learn AWS Lambda + EventBridge for automation.
+	•	Set up CloudWatch alarms + logs.
+	•	Automate alerts to Slack/Email.
+
+Week 7–8: Infrastructure as Code
+	•	Dive deep into Terraform: modules, variables, backend, state locking.
+	•	Implement a real-world IaC project: provision VPC, EC2, RDS using Terraform.
+
+Week 9–10: Real-World Projects
+	•	Pick one automation use case (e.g., automated EC2 backup and cleanup).
+	•	Integrate CI/CD + Lambda + IAM + CloudWatch.
+	•	Push your full project to GitHub with README and architecture diagram.
+
+
