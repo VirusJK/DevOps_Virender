@@ -1,0 +1,156 @@
+Enterprise Cloud Migration Project - AWS
+
+This project demonstrates a real-time cloud migration of legacy on-premises infrastructure to AWS Cloud. It covers all critical phases of the migration lifecycle: Discovery, Planning, Execution, Validation, and Cutover—with real hands-on examples, Terraform automation, and AWS best practices.
+
+⸻
+
+Project Overview
+
+Objective: Migrate a multi-tier application stack (Web, App, DB) from on-premises to AWS, modernize it for scalability and cost-efficiency using AWS native services, and ensure zero-downtime cutover.
+
+⸻
+
+Tech Stack
+	•	Cloud: AWS
+	•	Automation: Terraform, Python (Boto3), Bash
+	•	Migration Tools:
+	•	AWS Application Discovery Service
+	•	AWS Migration Evaluator
+	•	AWS Migration Hub
+	•	AWS Application Migration Service (MGN)
+	•	AWS Database Migration Service (DMS)
+	•	Services Used: EC2, VPC, S3, RDS, ELB, IAM, CloudWatch, CloudTrail, Lambda, SNS
+
+⸻
+
+Migration Lifecycle
+
+1. Discovery & Assessment
+	•	Used AWS Migration Evaluator and Application Discovery Service to collect infrastructure usage and application dependency data.
+	•	Created a TCO Report and Right-Sizing Recommendations.
+
+2. Migration Planning
+	•	Documented current architecture.
+	•	Designed target AWS architecture using Well-Architected Framework.
+	•	Selected Lift-and-Shift strategy via MGN and homogeneous DB migration via DMS.
+
+3. Execution (Terraform + AWS MGN)
+	•	Provisioned VPC, Subnets, Route Tables, IGW/NATGW using Terraform.
+	•	Used MGN to replicate and migrate app and web servers.
+	•	Migrated MySQL database using DMS to RDS.
+	•	Performed test launches and validation in staging VPC.
+
+4. Cutover
+	•	DNS switch done post validation.
+	•	Application tested post-migration using health checks and logs.
+	•	Legacy systems archived and decommissioned after successful migration.
+
+5. Post-Migration Optimization
+	•	Enabled CloudWatch monitoring and S3 lifecycle policies.
+	•	Created cost alerts using Budgets + SNS.
+	•	Set up Auto Scaling, Backups, and Patch Management.
+
+
+
+How to Use
+
+Pre-requisites
+	•	AWS CLI configured
+	•	Terraform installed
+	•	IAM permissions for EC2, S3, DMS, MGN, VPC, RDS, CloudWatch, SNS
+
+Step-by-Step Deployment
+
+
+Trigger Application Migration
+	•	Log in to AWS Console
+	•	Go to AWS Application Migration Service
+	•	Add source servers and install replication agents
+	•	Launch test instances, then cutover
+
+Outputs
+	•	Live migrated infrastructure
+	•	RDS database fully replicated from on-prem
+	•	Cost optimization suggestions applied
+	•	Alerts and monitoring enabled
+
+
+
+
+Readymade resume template :
+
+PROFESSIONAL SUMMARY
+
+Result-oriented AWS Cloud & DevOps Engineer with X+ years of hands-on experience in designing, migrating, and automating cloud infrastructure. Proven track record of successful on-premise to AWS migrations using MGN, DMS, and Terraform. Skilled in cloud-native services, CI/CD pipelines, infrastructure as code (IaC), and production support in Agile environments.
+
+⸻
+
+KEY SKILLS
+	•	Cloud Platforms: AWS (EC2, VPC, S3, RDS, IAM, Lambda, CloudWatch, MGN, DMS)
+	•	DevOps Tools: Git, GitHub, Jenkins, Docker, Kubernetes, Ansible
+	•	IaC & Automation: Terraform, CloudFormation, Python, Bash, PowerShell
+	•	Monitoring & Logging: CloudWatch, ELK Stack, Prometheus, Grafana
+	•	CI/CD: Jenkins, GitHub Actions, AWS CodePipeline
+	•	Networking: Route53, VPC Peering, Direct Connect, Site-to-Site VPN
+	•	Databases: MySQL, PostgreSQL, AWS RDS, Aurora
+	•	Methodologies: Agile, Scrum, Kanban
+
+⸻
+
+CERTIFICATIONS
+	•	AWS Certified Solutions Architect – Associate
+	•	AWS Certified DevOps Engineer – Professional (In Progress)
+
+⸻
+
+PROFESSIONAL EXPERIENCE
+
+AWS Cloud Migration Engineer
+XYZ Technologies | Jan 2023 – Present
+	•	Led 6+ end-to-end AWS migration projects from on-prem to cloud
+	•	Performed discovery using AWS Migration Evaluator & Application Discovery Service
+	•	Migrated workloads using AWS MGN and validated via automation scripts
+	•	Built Terraform modules for VPC, EC2, RDS, and IAM configurations
+	•	Automated post-migration validations and notifications using Lambda and SNS
+	•	Collaborated with Dev and Network teams to ensure seamless cutover
+
+DevOps Engineer
+ABC Corp | Jul 2021 – Dec 2022
+	•	Set up CI/CD pipelines using Jenkins & GitHub Actions for microservices
+	•	Dockerized Java & NodeJS applications and deployed on ECS & EKS
+	•	Created Infrastructure as Code (IaC) templates in Terraform
+	•	Monitored systems with CloudWatch, ELK stack, and Grafana
+	•	Participated in 24x7 production support and incident resolution
+
+System Administrator (L1 to Cloud Transition)
+LMN Pvt Ltd | Jun 2019 – Jun 2021
+	•	Maintained Linux servers and scheduled regular system backups
+	•	Supported AWS account setup and initial EC2 + S3 infrastructure
+	•	Developed basic Bash & PowerShell scripts for repetitive admin tasks
+	•	Took initiative to transition team from traditional VMs to AWS Cloud
+
+⸻
+
+PROJECTS
+
+1. On-Prem to AWS Cloud Migration
+	•	Migrated 10+ servers from VMware to AWS using AWS MGN and DMS
+	•	Built Terraform templates for infrastructure provisioning
+	•	Automated post-migration validation and alerting
+(Full case study in GitHub repo: github.com/yourprofile/aws-migration-project)
+
+2. CI/CD Automation for Serverless App
+	•	Used GitHub Actions to deploy Lambda + API Gateway apps
+	•	Enabled S3-triggered pipeline deployment via CodePipeline
+
+3. Multi-Tier Web App on AWS with IaC
+	•	Deployed a 3-tier architecture (Web, App, DB) using Terraform
+	•	Load balancing with ALB, Auto Scaling groups, RDS + IAM roles
+
+⸻
+
+EDUCATION
+
+B.Tech in Computer Science
+XYZ University | 2015 – 2019
+
