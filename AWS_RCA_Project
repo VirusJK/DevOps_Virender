@@ -1,0 +1,148 @@
+Automated Incident RCA Using AWS (Slack + S3 + Lambda + Bedrock)
+
+This project demonstrates how to automatically generate Root Cause Analysis (RCA) reports for incidents using AWS Lambda, Amazon Bedrock, Slack, and S3. It enables on-call engineers or CloudOps teams to streamline incident resolution by generating intelligent summaries based on logs, metadata, and Git context.
+
+⸻
+
+Table of Contents
+	•	Problem Statement
+	•	Solution Overview
+	•	Architecture Diagram
+	•	How It Works
+	•	Project Structure
+	•	Setup Instructions
+	•	Sample RCA Output
+	•	Future Enhancements
+
+⸻
+
+Problem Statement
+
+Most companies perform RCA manually, collecting logs, timestamps, and incident summaries manually from different sources. This is time-consuming, error-prone, and repetitive.
+
+⸻
+
+Solution Overview
+
+We automate RCA creation using:
+	•	Lambda for execution logic
+	•	Amazon Bedrock (Claude or Titan) for LLM-powered incident summarization
+	•	Slack for incident notifications and RCA delivery
+	•	S3 for storing and organizing RCA reports
+
+
+How It Works
+	1.	An incident occurs and gets reported via Slack or CloudWatch.
+	2.	A trigger (manual or event-based) invokes a Lambda function.
+	3.	Lambda:
+	•	Fetches relevant logs from S3 or CloudWatch
+	•	Queries Git metadata (if available)
+	•	Calls Amazon Bedrock to summarize RCA
+	•	Stores the RCA report in S3
+	•	Posts a summary with RCA link back in Slack
+
+
+Lambda Function Code (rca_generator.py)
+
+import boto3
+import json
+import os
+import datetime
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+
+def lambda_handler(event, context):
+    logs = event.get("logs", [])
+    incident_id = event.get("incident_id", "INC123456")
+    slack_channel = os.environ['SLACK_CHANNEL']
+    
+    summary = summarize_with_bedrock(logs)
+    s3_url = upload_to_s3(incident_id, summary)
+    notify_slack(slack_channel, incident_id, summary, s3_url)
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps('RCA posted successfully')
+    }
+
+def summarize_with_bedrock(logs):
+    bedrock = boto3.client("bedrock-runtime")
+    prompt = f"Summarize the root cause for this incident:\n{json.dumps(logs)}"
+    response = bedrock.invoke_model(
+        body=json.dumps({"inputText": prompt}),
+        modelId="anthropic.claude-v2",
+        contentType="application/json",
+        accept="application/json"
+    )
+    result = json.loads(response['body'].read())
+    return result.get("completion", "No summary found.")
+
+def upload_to_s3(incident_id, summary):
+    s3 = boto3.client('s3')
+    key = f"rca/{incident_id}.txt"
+    s3.put_object(
+        Bucket=os.environ['S3_BUCKET'],
+        Key=key,
+        Body=summary.encode('utf-8')
+    )
+    return f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/{key}"
+
+def notify_slack(channel, incident_id, summary, s3_url):
+    slack_client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    try:
+        slack_client.chat_postMessage(
+            channel=channel,
+            text=f"*Incident RCA*: {incident_id}\n\n*Summary:*\n{summary}\n\n*Download Full RCA:* {s3_url}"
+        )
+    except SlackApiError as e:
+        print(f"Slack Error: {e.response['error']}")
+
+
+requirements.txt
+boto3
+slack_sdk
+
+
+Setup Instructions
+
+1. Configure Environment Variables in Lambda
+	•	S3_BUCKET: Name of your RCA S3 bucket
+	•	SLACK_BOT_TOKEN: Your Slack bot token
+	•	SLACK_CHANNEL: Slack channel where messages should be sent
+
+2. IAM Role Permissions
+
+Attach policies to Lambda’s execution role:
+	•	AmazonS3FullAccess (or scoped down)
+	•	Bedrock access
+	•	CloudWatchLogsReadOnly
+	•	SecretsManager (if storing Slack tokens securely)
+
+3. Upload the Lambda Code
+
+Package and deploy the code from lambda/rca_generator.py.
+
+4. Setup Slack App (Optional)
+	•	Create a Slack bot
+	•	Install it to your workspace
+	•	Get OAuth token and add it to Lambda env vars
+
+⸻
+
+Sample RCA Output
+
+Incident ID: INC123456  
+Summary:  
+At 09:45 UTC, a misconfigured security group update caused EC2 instances in the private subnet to lose access to the RDS instance. The change was made via a manual deployment from GitHub without peer review...
+
+Resolution:  
+Rollback the SG rule and add validation in CI/CD.
+
+RCA Link: [View Full RCA](https://bucket.s3.amazonaws.com/rca/INC123456.txt)
+
+
+Future Enhancements
+	•	CloudWatch trigger integration for real-time events
+	•	GitHub PR metadata enrichment
+	•	Jira ticket creation with RCA summary
+	•	User-defined RCA templates per service
