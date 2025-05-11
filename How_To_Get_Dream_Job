@@ -1,0 +1,108 @@
+Welcome to your personal Interview Preparation Roadmap — designed to help you crack interviews through real feedback, hands-on learning, and consistent practice.
+
+Whether you’re a fresher, switching domains, or just stuck in a loop of rejections — this roadmap will help you learn smart, build confidence, and stand out in interviews.
+
+⸻
+
+Step 1: Change Your Approach
+
+Stop aiming to clear interviews. Start aiming to learn from them.
+
+	•	Start giving interviews, even if you feel underprepared.
+	•	Don’t focus on clearing them.
+	•	Focus on the questions, topics, and patterns.
+
+⸻
+
+Step 2: Document Questions and Topics
+
+Start building your own knowledge base.
+	•	Create a Google Sheet or Notion page with:
+	•	Interview date & company
+	•	Questions asked
+	•	Topics involved
+	•	Your confidence level (0–10)
+
+
+SampleFormat: 
+Date
+Company
+Question
+Topic
+Confidence
+01-May-25
+ABC Corp
+How does CI/CD work in AWS?
+DevOps
+4
+
+
+Step 3: Analyze and Prioritize Topics
+
+Sort your questions and identify repeating topics:
+	•	Make a “Most Asked Topics” list
+	•	Prioritize 5-10 topics to focus on first
+
+Example Categories:
+	•	Cloud (AWS/Azure/GCP)
+	•	DevOps Tools (Jenkins, Git, Docker, Terraform)
+	•	Coding (DSA, Python, Java)
+	•	System Design
+	•	DBMS & SQL
+	•	Linux & Shell Scripting
+	•	Networking Basics
+
+⸻
+
+Step 4: Learn the Concepts
+
+Use free/paid platforms (YouTube, Udemy, Coursera, Docs):
+	•	Learn in short bursts (45-60 mins/day)
+	•	Understand real-world use cases
+	•	Refer to official documentation when in doubt
+
+⸻
+
+Step 5: Do Hands-on Practice
+
+“You don’t learn to swim by reading about water.”
+
+	•	Build mini projects or clone real-world use cases
+	•	Set up CI/CD pipelines, deploy servers, write scripts, etc.
+	•	Use platforms like:
+	•	AWS Free Tier / Azure Student Account
+	•	GitHub for version control
+	•	Replit / VS Code for coding
+
+⸻
+
+Step 6: Build Projects & Showcase Skills
+
+Start with small projects related to your topics:
+	•	DevOps Project: Automate EC2 deployment with Jenkins + Terraform
+	•	Cloud Project: Multi-tier architecture on AWS
+	•	Data Project: Build a dashboard using SQL + Python
+	•	Scripting Project: Automate file backup using shell scripting
+
+Upload to GitHub with:
+	•	A clear README.md
+	•	Project screenshots or demo links
+	•	Simple, clean folder structure
+
+⸻
+
+Step 7: Resume + LinkedIn + GitHub Optimization
+	•	Highlight your new skills & projects
+	•	Mention key interview questions you’ve tackled
+	•	Add your GitHub links to resume & LinkedIn
+	•	Keep your LinkedIn updated with your learning journey
+
+⸻
+
+Step 8: Keep Interviewing + Updating
+	•	Give 1–2 interviews per week
+	•	Update your question list regularly
+	•	Keep learning, building, and reflecting
+
+
+Thanks 😊
